@@ -8,6 +8,8 @@ import java.io.*;
 // SLF4J: Defaulting to no-operation (NOP) logger implementation
 // SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
 
+// iText support info: https://itextpdf.com/en/products/itext-7/itext-7-core
+
 public class Export {
     public static final String DEST = "C:\\tangzhong\\out\\PDFs\\hello.pdf"; //TODO make this so it doesn't overwrite existing file (renames), and change file path to something more appropriate
 

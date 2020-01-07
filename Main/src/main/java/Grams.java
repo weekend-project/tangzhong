@@ -33,7 +33,7 @@ public class Grams {
         if (initialHydration < 75.0) { // we only need to change things if the hydration is below 75%
             Thread.sleep(1000);
             System.out.println();
-            System.out.println("In order to use tangzhong, you want your hydration to be at least 75%");
+            System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             Thread.sleep(1000);
             System.out.println();
             newLiquidWeight = liquidWeight + getMoreLiquid(flourWeight, liquidWeight);
