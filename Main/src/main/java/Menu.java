@@ -1,187 +1,209 @@
+import java.util.ArrayList;
 
 public class Menu {
+    public static String separator = ":  ";
+    char[] charsTitle = {'+', '=', '=' }; // array that holds all characters in the title bar
+    char[] charsBanner = {'|', '>', '<' }; // array that holds all characters in the banner bar
+    char[] charsRow = {'|', ' ', '-' }; // array that holds all characters in each row
+    String title = "tangzhong recipe builder"; // text to be displayed at the very top, ideally never changes
+    int width = 60;
 
-    // Variables for drawRowWithOption
-    private static char charLeft = ' ';
-    private static char charRight = ' ';
-    private static String optionName0 = "exit";
-    private static String optionName1 = "use metric";
-    private static String optionName2 = "use imperial";
-    private static String optionName3 = "use volume (cups)";
-    //private static String optionName4 = "include only primary liquid";
-    //private static String optionName5 = "include all liquid ingredients";
-    private static String separator = ":  ";
-    private static int optionNum0 = 0;
-    private static int optionNum1 = 1;
-    private static int optionNum2 = 2;
-    private static int optionNum3 = 3;
-    private static int optionNum4 = 4;
-    private static int optionNum5 = 5;
-    private static int option0Length = optionName0.length() + separator.length() + Integer.toString(optionNum0).length();
-    private static int option1Length = optionName1.length() + separator.length() + Integer.toString(optionNum1).length();
-    private static int option2Length = optionName2.length() + separator.length() + Integer.toString(optionNum2).length();
-    private static int option3Length = optionName3.length() + separator.length() + Integer.toString(optionNum3).length();
-    //private static int option4Length = optionName4.length() + separator.length() + Integer.toString(optionNum4).length();
-    //private static int option5Length = optionName5.length() + separator.length() + Integer.toString(optionNum5).length();
-
-    public static void mainMenu(char cornerChar, char outsideChar, String title, String banner, int width) {
-        drawTopMenuBar(cornerChar, '=', '=', title, width);
-        drawBanner(outsideChar, '>', '<', banner, width);
-        drawRow(outsideChar, ' ', width);
-        drawRowWithOption(outsideChar, charLeft, charRight, optionName1, optionNum1, width);
-        drawRowWithOption(outsideChar, charLeft, charRight, optionName2, optionNum2, width);
-        drawRowWithOption(outsideChar, charLeft, charRight, optionName3, optionNum3, width);
-        //drawRowWithOption(outsideChar, charLeft, charRight, optionName4, optionNum4, width);
-        // drawRowWithOption(outsideChar, charLeft, charRight, optionName4, optionNum5, width);
-        drawRowWithOption(outsideChar, charLeft, charRight, optionName0, optionNum0, width);
-        drawRow(outsideChar, ' ', width);
-        drawRow(cornerChar, '-', width);
+    /** --- drawMenu method ---
+     * (1) calls drawTitle, which passes charsTitle array, title string, and width int. This draws the top-most row
+     * (2) calls drawBanner, which passes charsBanner array, banner string, and width int. Draws the banner row
+     * (3) calls drawRow, which passes the first and second characters in array charsRow, and draws a generic row
+     * (4) determines the max length of each option name + the separator length + option number so that things are
+     *     centered and right-aligned
+     * (5) calls drawRowWithOption as many times as there are strings in the optionNames ArrayList, which is populated
+     *     from the call setOptionNames(<custom strings here>)
+     * (6) draws one generic row for aesthetics only
+     * (7) draw the bottom-most row with a different char to close the box
+     * --------------------------------------------------------------------
+     * @param charsTitle  array that holds all characters in the title bar
+     * @param charsBanner array that holds all characters in the banner bar
+     * @param charsRow    array that holds all characters in each row
+     * @param title       text to be displayed at the very top
+     * @param banner      text to be displayed in the sub-menu
+     * @param optionNames ArrayList to hold the variable amount of title names
+     * @param optionNums  ArrayList to hold the numbers for each optionName
+     * @param width       how wide the menu box will be (number of characters wide)
+     */
+    public static void drawMenu(char[] charsTitle, char[] charsBanner, char[] charsRow, String title, String banner,
+                                ArrayList<String> optionNames, ArrayList<Character> optionNums, int width) {
+        drawTitle(charsTitle, title, width); // draws the title bar
+        drawBanner(charsBanner, banner, width); // draws the banner bar
+        drawRow(charsRow[0], charsRow[1], width); // draws a generic row
+        int maxLength = 0; // this will be updated next
+        for (int i = 0; i < optionNames.size(); i++) { // iterates for the same amount of optionNames
+            if (maxLength < getOptionLength(optionNames.get(i))) {
+                maxLength = getOptionLength(optionNames.get(i)); // changes maxLength to the longest option name + separator + optionNum
+            }
+        }
+        for (int i = 0; i < optionNames.size(); i++) { // this repeatedly calls the below method for each optionName
+            drawRowWithOption(charsRow[0], charsRow[1], charsRow[1], optionNames.get(i), optionNums.get(i), width,
+                    maxLength);
+        }
+        drawRow(charsRow[0], charsRow[1], width); // draws generic row
+        drawRow(charsRow[0], charsRow[2], width); // draws generic row with different char so it closes the box
     }
 
-    public static void drawTopMenuBar(char cornerChar, char inCharLeft, char inCharRight, String title, int width) {
+    /** --- drawTitle method ---
+     * (1) control flow determines if the length of the title string is even or odd and if the int width is even or odd
+     * (2) prints the outside char one time
+     * (3) prints the left char as many times as (width - title.length()) / 2
+     * (4) prints the title in upper case with spaces around it
+     * (5) prints the right char as many times as (width - title.length()) / 2
+     * (6) prints the outside char one time
+     * ---------------------------------------------------------------
+     * @param charsTitle array that holds all chars for the title row
+     * @param title The primary title string
+     * @param width The width of the whole box, not counting the outside chars
+     */
+    public static void drawTitle(char[] charsTitle, String title, int width) {
 
+        // if the length of the title is even and the int width is even
         if (title.length() % 2 == 0 && width % 2 == 0) {
-            System.out.print(cornerChar);
+            System.out.print(charsTitle[0]);
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsTitle[1]);
             }
             System.out.print(" ");
             System.out.print(title.toUpperCase());
             System.out.print(" ");
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsTitle[2]);
             }
-            System.out.println(cornerChar);
+            System.out.println(charsTitle[0]);
+
+        // if the length of the title is odd and the int width is even
         } else if (title.length() % 2 != 0 && width % 2 == 0) {
-            System.out.print(cornerChar);
+            System.out.print(charsTitle[0]);
             for (int i = 1; i <= (width - title.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsTitle[1]);
             }
             System.out.print(" ");
             System.out.print(title.toUpperCase());
             System.out.print(" ");
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsTitle[2]);
             }
-            System.out.println(cornerChar);
-        } else if (title.length() % 2 == 0 && width % 2 != 0) {
-            System.out.print(cornerChar);
+            System.out.println(charsTitle[0]);
+
+        // if the length of the title is even and the int width is odd
+        } else if (title.length() % 2 == 0) {
+            System.out.print(charsTitle[0]);
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsTitle[1]);
             }
             System.out.print(" ");
             System.out.print(title.toUpperCase());
             System.out.print(" ");
             for (int i = 0; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsTitle[2]);
             }
-            System.out.println(cornerChar);
+            System.out.println(charsTitle[0]);
+
+        // if the length of the title is odd and the int width is odd
         } else {
-            System.out.print(cornerChar);
+            System.out.print(charsTitle[0]);
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsTitle[1]);
             }
             System.out.print(" ");
             System.out.print(title.toUpperCase());
             System.out.print(" ");
             for (int i = 1; i < (width - title.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsTitle[2]);
             }
-            System.out.println(cornerChar);
+            System.out.println(charsTitle[0]);
         }
     }
 
-    public static void drawBanner(char outsideChar, char inCharLeft, char inCharRight, String banner, int width) {
+    public static void drawBanner(char[] charsBanner, String banner, int width) {
         if (banner.length() % 2 == 0 && width % 2 == 0) {
-            System.out.print(outsideChar);
+            System.out.print(charsBanner[0]);
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsBanner[1]);
             }
             System.out.print("  ");
             System.out.print(banner.toUpperCase());
             System.out.print("  ");
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsBanner[2]);
             }
-            System.out.println(outsideChar);
+            System.out.println(charsBanner[0]);
         } else if (banner.length() % 2 != 0 && width % 2 == 0) {
-            System.out.print(outsideChar);
+            System.out.print(charsBanner[0]);
             for (int i = 2; i <= (width - banner.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsBanner[1]);
             }
             System.out.print("  ");
             System.out.print(banner.toUpperCase());
             System.out.print("  ");
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsBanner[2]);
             }
-            System.out.println(outsideChar);
+            System.out.println(charsBanner[0]);
         } else if (banner.length() % 2 == 0 && width % 2 != 0) {
-            System.out.print(outsideChar);
+            System.out.print(charsBanner[0]);
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsBanner[1]);
             }
             System.out.print("  ");
             System.out.print(banner.toUpperCase());
             System.out.print("  ");
             for (int i = 1; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsBanner[2]);
             }
-            System.out.println(outsideChar);
+            System.out.println(charsBanner[0]);
         } else {
-            System.out.print(outsideChar);
+            System.out.print(charsBanner[0]);
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharLeft);
+                System.out.print(charsBanner[1]);
             }
             System.out.print("  ");
             System.out.print(banner.toUpperCase());
             System.out.print("  ");
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
-                System.out.print(inCharRight);
+                System.out.print(charsBanner[2]);
             }
-            System.out.println(outsideChar);
+            System.out.println(charsBanner[0]);
         }
     }
 
-    public static void drawRow(char outsideChar, char insideChar, int width) {
-        System.out.print(outsideChar);
-        repeat(insideChar, width);
-        System.out.print(outsideChar);
-        System.out.println();
+    public static ArrayList<String> setOptionNames(String... optionName) {
+        ArrayList<String> optionNames = new ArrayList<>(); // creating a new ArrayList to hold the variable amount of title names
+        for (String option : optionName) { // iterates through each optionName arg that is passed in, and then adds that string to the ArrayList
+            optionNames.add(option); //TODO not sure what Collection.addAll does exactly, leaving it this way for now
+        }
+        return optionNames;
     }
 
-    /**
-     * NOTE: For now, you must manually change the getMaxLength parameters as needed. getMaxLength is a varargs method
-     * and can accept any number of int parameters.
-     * ---
-     * This method does the following:
-     * (1) Gets the maximum length of all optionNames that are passed into the getMaxLength (varargs) method
-     * (2) Calculates the difference of that number and each individual optionName as it is called
-     * (3) Creates a String space that is space.length() == difference
-     * (4) Calculates the total length of the option name, including leading spaces, separator, and option number
-     * (5) Prints the outside character
-     * (6) Prints all characters to the left of the option name
-     * (7) Prints the option name starting with leading spaces, then option name, separator, and option number
-     * (8) Checks if width is even or not and prints the appropriate number of characters to the right of option name
-     * (9) Prints the outside character
-     *
-     * @param outsideChar printed on the left and right boundary of the row
-     * @param inCharLeft  printed on the left of the optionName
-     * @param inCharRight printed on the right of the optionName
-     * @param optionName  name of the option
-     * @param optionNum   number that will correspond with the option name
-     * @param width       width of the row, and should be provided in the main method call
-     */
-    public static void drawRowWithOption(char outsideChar, char inCharLeft, char inCharRight, String optionName, int optionNum, int width) {
-        int longest = getMaxLength(option0Length, option1Length, option2Length, option3Length);
-        int difference = longest - optionName.length();
+    public static ArrayList<Character> setOptionNumbers(char... optionNums) {
+        ArrayList<Character> optionNumbers = new ArrayList<>(); // creating a new ArrayList to hold the variable amount of title names
+        for (char num : optionNums) { // iterates through each optionName arg that is passed in, and then adds that string to the ArrayList
+            optionNumbers.add(num); //TODO not sure what Collection.addAll does exactly, leaving it this way for now
+        }
+        return optionNumbers;
+    }
+
+    public static int getOptionLength(String optionName) {
+        return optionName.length() + separator.length() + 1; // the + 1 is to account for the length of the char
+    }
+
+    public static void drawRowWithOption(char outsideChar, char inCharLeft, char inCharRight, String optionName,
+                                         char optionNum, int width, int maxLength) {
+
+        // LAST LEFT OFF, trying to figure out how to get the max length when calling this method x times
+        int optionLength = optionName.length() + separator.length() + 1; // the + 1 is to account for the length of the char
+        int difference = maxLength - optionLength;
         String space = "";
         for (int i = 0; i < difference; i++) {
             space += " ";
         }
         int lengthOfOption = (space.length() + optionName.length() + separator.length() + Integer.toString(optionNum).length());
         System.out.print(outsideChar);
-        for (int i = 1; i < (width - lengthOfOption) / 2; i++) {
+        for (int i = 0; i < (width - lengthOfOption) / 2; i++) {
             System.out.print(inCharLeft);
         }
         System.out.print(space + optionName.toUpperCase() + separator + optionNum);
@@ -197,22 +219,16 @@ public class Menu {
         System.out.println(outsideChar);
     }
 
+    public static void drawRow(char outsideChar, char insideChar, int width) {
+        System.out.print(outsideChar);
+        repeat(insideChar, width);
+        System.out.print(outsideChar);
+        System.out.println();
+    }
+
     public static void repeat(char c, int n) {
         for (int i = 1; i <= n; i++) {
             System.out.print(c);
         }
     }
-
-    private static int maxLength = 0;
-
-    public static int getMaxLength(int... optionLength) {
-        for (int i : optionLength) {
-            if (i > maxLength) {
-                maxLength = i;
-            }
-        }
-        return maxLength;
-    }
-
-
 }

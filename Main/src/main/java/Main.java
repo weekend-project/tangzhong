@@ -5,16 +5,29 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         Scanner reader = new Scanner(System.in);
-        Menu.mainMenu('+','|',"tangzhong recipe builder","choose your measurements",65);
+        Menu main = new Menu();
+
+        /*
+            When calling drawMenu, use Menu.java to change some parameters, and pass in custom parameters when calling
+            setOptionNames(<custom params here>) and setOptionNumbers(<custom params here>).
+         */
+        Menu.drawMenu(main.charsTitle,main.charsBanner,main.charsRow,main.title,"main menu",
+            Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),main.width);
+
         System.out.print("Enter your choice here: ");
         int userChoice = reader.nextInt();
         System.out.println();
-        while (userChoice < 1 || userChoice > 3) { // this catches invalid input
-            Menu.mainMenu('+','|',"tangzhong recipe builder","choose your measurements",65);
+
+        // this loop catches invalid input
+        while (userChoice < 0 || userChoice > 3) {
+            Menu.drawMenu(main.charsTitle,main.charsBanner,main.charsRow,main.title,"main menu",
+                    Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),60);
             System.out.print("You must enter a valid option, try again: ");
             userChoice = reader.nextInt();
             System.out.println();
         }
+
+        // control flow for userChoice
         if (userChoice == 1) {
             Grams.gramConversion();
         } else if (userChoice == 2){
