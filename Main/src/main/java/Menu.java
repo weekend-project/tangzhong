@@ -34,9 +34,9 @@ public class Menu {
         drawBanner(charsBanner, banner, width); // draws the banner bar
         drawRow(charsRow[0], charsRow[1], width); // draws a generic row
         int maxLength = 0; // this will be updated next
-        for (int i = 0; i < optionNames.size(); i++) { // iterates for the same amount of optionNames
-            if (maxLength < getOptionLength(optionNames.get(i))) {
-                maxLength = getOptionLength(optionNames.get(i)); // changes maxLength to the longest option name + separator + optionNum
+        for (String optionName : optionNames) { // iterates for the same amount of optionNames
+            if (maxLength < getOptionLength(optionName)) {
+                maxLength = getOptionLength(optionName); // changes maxLength to the longest option name + separator + optionNum
             }
         }
         for (int i = 0; i < optionNames.size(); i++) { // this repeatedly calls the below method for each optionName
@@ -144,7 +144,7 @@ public class Menu {
                 System.out.print(charsBanner[2]);
             }
             System.out.println(charsBanner[0]);
-        } else if (banner.length() % 2 == 0 && width % 2 != 0) {
+        } else if (banner.length() % 2 == 0) {
             System.out.print(charsBanner[0]);
             for (int i = 2; i < (width - banner.length()) / 2; i++) {
                 System.out.print(charsBanner[1]);

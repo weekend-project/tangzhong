@@ -1,9 +1,13 @@
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException {
+        goToMainMenu();
+        //Export.getPDF();
+    }
+
+    public static void goToMainMenu() throws InterruptedException {
         Scanner reader = new Scanner(System.in);
         Menu main = new Menu();
 
@@ -12,7 +16,7 @@ public class Main {
             setOptionNames(<custom params here>) and setOptionNumbers(<custom params here>).
          */
         Menu.drawMenu(main.charsTitle,main.charsBanner,main.charsRow,main.title,"main menu",
-            Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),main.width);
+                Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),main.width);
 
         System.out.print("Enter your choice here: ");
         int userChoice = reader.nextInt();
@@ -29,15 +33,11 @@ public class Main {
 
         // control flow for userChoice
         if (userChoice == 1) {
-            Grams.gramConversion();
+            Grams.goToGramsMenu();
         } else if (userChoice == 2){
             Volume.volumeConversion();
         } else if (userChoice == 3) {
             Conversions.temp();
         }
-        //Export.getPDF();
     }
-
-    //TODO create method for allowing the user to select what type of liquid ingredients (milk, eggs, honey, butter, etc)
-
 }
