@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
 public class Menu {
+    public static final String TITLE = "tangzhong recipe builder";
     public static String separator = ":  ";
-    char[] charsTitle = {'+', '=', '=' }; // array that holds all characters in the title bar
-    char[] charsBanner = {'|', '>', '<' }; // array that holds all characters in the banner bar
-    char[] charsRow = {'|', ' ', '-' }; // array that holds all characters in each row
-    String title = "tangzhong recipe builder"; // text to be displayed at the very top, ideally never changes
-    int width = 60;
+    public static int width = 60;
+    char[] charsTitle = {'+', '=', '=' };
+    char[] charsBanner = {'|', '>', '<' };
+    char[] charsRow = {'|', ' ', '-' };
 
     /** --- drawMenu method ---
      * (1) calls drawTitle, which passes charsTitle array, title string, and width int. This draws the top-most row

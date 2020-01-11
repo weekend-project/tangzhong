@@ -1,43 +1,51 @@
+import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+//TODO change option numbers to letters that correspond with option names
 
-    public static void main(String[] args) throws InterruptedException {
-        goToMainMenu();
-        //Export.getPDF();
+public class Main {
+    private static Scanner reader = new Scanner(System.in);
+    private static Menu main = new Menu();
+    private static int userMainChoice;
+
+    public static void main(String[] args) throws IOException {
+        do {
+            goToMainMenu();
+        } while (userMainChoice != 0);
     }
 
-    public static void goToMainMenu() throws InterruptedException {
-        Scanner reader = new Scanner(System.in);
-        Menu main = new Menu();
-
+    public static void goToMainMenu() throws IOException {
         /*
             When calling drawMenu, use Menu.java to change some parameters, and pass in custom parameters when calling
             setOptionNames(<custom params here>) and setOptionNumbers(<custom params here>).
          */
-        Menu.drawMenu(main.charsTitle,main.charsBanner,main.charsRow,main.title,"main menu",
-                Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),main.width);
+        Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "main menu",
+                Menu.setOptionNames("metric", "imperial", "volume", "exit"), Menu.setOptionNumbers('1', '2', '3', '0'),
+                Menu.width);
 
         System.out.print("Enter your choice here: ");
-        int userChoice = reader.nextInt();
+        userMainChoice = reader.nextInt();
         System.out.println();
 
-        // this loop catches invalid input
-        while (userChoice < 0 || userChoice > 3) {
-            Menu.drawMenu(main.charsTitle,main.charsBanner,main.charsRow,main.title,"main menu",
-                    Menu.setOptionNames("metric","imperial","volume","exit"),Menu.setOptionNumbers('1','2','3','0'),60);
+        if (userMainChoice == 0)
+            System.out.println("Goodbye!");
+
+        while (userMainChoice < 0 || userMainChoice > 3) {
+            Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "main menu",
+                    Menu.setOptionNames("metric", "imperial", "volume", "exit"),
+                    Menu.setOptionNumbers('1', '2', '3', '0'), 60);
             System.out.print("You must enter a valid option, try again: ");
-            userChoice = reader.nextInt();
+            userMainChoice = reader.nextInt();
             System.out.println();
         }
 
-        // control flow for userChoice
-        if (userChoice == 1) {
+        if (userMainChoice == 1) {
             Grams.goToGramsMenu();
-        } else if (userChoice == 2){
-            Volume.volumeConversion();
-        } else if (userChoice == 3) {
-            Conversions.temp();
+        } else if (userMainChoice == 2) {
+            Imperial.temp();
+        } else if (userMainChoice == 3) {
+            Volume.goToVolumeMenu();
         }
     }
 }
+
