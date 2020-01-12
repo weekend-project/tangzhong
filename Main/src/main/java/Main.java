@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 //TODO change option numbers to letters that correspond with option names
 
+//TODO do you really need to pass in the three char arrays for every call to drawMenu?
+
 public class Main {
     private static Scanner reader = new Scanner(System.in);
     private static Menu main = new Menu();
@@ -44,7 +46,17 @@ public class Main {
         } else if (userMainChoice == 2) {
             Imperial.temp();
         } else if (userMainChoice == 3) {
-            Volume.goToVolumeMenu();
+            Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "Proceed?", Menu.setOptionNames("proceed", "go back"),
+                    Menu.setOptionNumbers('1', '0'), Menu.width);
+            System.out.println("Using volume measurements is not recommended, you may experience \nrounding errors.");
+            System.out.println("Are you sure you wish to proceed?");
+            System.out.println();
+            System.out.print("Enter your choice here: ");
+            int proceed = reader.nextInt();
+            if (proceed == 1) {
+                Volume.goToVolumeMenu();
+            }
+            goToMainMenu();
         }
     }
 }

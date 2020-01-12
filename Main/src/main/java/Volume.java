@@ -11,7 +11,7 @@ public class Volume {
 
     private static Scanner reader = new Scanner(System.in);
     private static Menu volume = new Menu();
-    private static String volumeBanner = "ingredient amounts in volume";
+    public static String volumeBanner = "ingredient amounts in volume";
     private static int timesChoseWater;
     private static int timesChoseMilk;
     private static int timesChoseEggs;
@@ -67,13 +67,13 @@ public class Volume {
             if (moreFlour == 1) {
                 System.out.print("Enter the amount of flour in cups: ");
                 timesChoseFlour++;
-                flourWeight += Math.round(Conversions.convertFlourToGrams(reader.nextInt()));
+                flourWeight += Math.round(Conversions.flourToGrams(reader.nextInt()));
             }
             goToVolumeMenu();
         }
         System.out.print("Enter the amount of all flour in cups: ");
         timesChoseFlour++;
-        flourWeight = Math.round(Conversions.convertFlourToGrams(reader.nextInt()));
+        flourWeight = Math.round(Conversions.flourToGrams(reader.nextInt()));
         goToVolumeMenu();
     }
 
@@ -184,14 +184,14 @@ public class Volume {
             if (moreButter == 1) {
                 System.out.print("Enter the amount of butter in tablespoons: ");
                 timesChoseButter++;
-                liquidWeight += (int) Math.round(Conversions.convertButterToGrams(reader.nextInt()) *
+                liquidWeight += (int) Math.round(Conversions.butterToGrams(reader.nextInt()) *
                         Conversions.BUTTER);
             }
             goToVolumeMenu();
         }
         System.out.print("Enter the amount of butter in tablespoons: ");
         timesChoseButter++;
-        liquidWeight += (int) Math.round(Conversions.convertButterToGrams(reader.nextInt()) * Conversions.BUTTER);
+        liquidWeight += (int) Math.round(Conversions.butterToGrams(reader.nextInt()) * Conversions.BUTTER);
         goToVolumeMenu();
     }
 
@@ -209,13 +209,13 @@ public class Volume {
             if (moreHoney == 1) {
                 System.out.print("Enter the amount of honey in tablespoons: ");
                 timesChoseHoney++;
-                liquidWeight += (int) Math.round(Conversions.convertHoneyToGrams(reader.nextInt()) * Conversions.HONEY);
+                liquidWeight += (int) Math.round(Conversions.honeyToGrams(reader.nextInt()) * Conversions.HONEY);
             }
             goToVolumeMenu();
         }
         System.out.print("Enter the amount of honey in tablespoons: ");
         timesChoseHoney++;
-        liquidWeight += (int) Math.round(Conversions.convertHoneyToGrams(reader.nextInt()) * Conversions.HONEY);
+        liquidWeight += (int) Math.round(Conversions.honeyToGrams(reader.nextInt()) * Conversions.HONEY);
         goToVolumeMenu();
     }
 
@@ -233,13 +233,13 @@ public class Volume {
             if (moreMilk == 1) {
                 System.out.print("Enter the amount of syrup in tablespoons: ");
                 timesChoseSyrup++;
-                liquidWeight += (int) Math.round(Conversions.convertSyrupToGrams(reader.nextInt()) * Conversions.SYRUP);
+                liquidWeight += (int) Math.round(Conversions.syrupToGrams(reader.nextInt()) * Conversions.SYRUP);
             }
             goToVolumeMenu();
         }
         System.out.print("Enter the amount of syrup in tablespoons: ");
         timesChoseSyrup++;
-        liquidWeight += (int) Math.round(Conversions.convertSyrupToGrams(reader.nextInt()) * Conversions.SYRUP);
+        liquidWeight += (int) Math.round(Conversions.syrupToGrams(reader.nextInt()) * Conversions.SYRUP);
         goToVolumeMenu();
     }
 
@@ -258,14 +258,14 @@ public class Volume {
             if (moreMilk == 1) {
                 System.out.print("Enter the amount of molasses in tablespoons: ");
                 timesChoseMolasses++;
-                liquidWeight += (int) Math.round(Conversions.convertMolassesToGrams(reader.nextInt()) *
+                liquidWeight += (int) Math.round(Conversions.molassesToGrams(reader.nextInt()) *
                         Conversions.MOLASSES);
             }
             goToVolumeMenu();
         }
         System.out.print("Enter the amount of molasses in tablespoons: ");
         timesChoseMolasses++;
-        liquidWeight += (int) Math.round(Conversions.convertMolassesToGrams(reader.nextInt()) * Conversions.MOLASSES);
+        liquidWeight += (int) Math.round(Conversions.molassesToGrams(reader.nextInt()) * Conversions.MOLASSES);
         goToVolumeMenu();
     }
 
@@ -302,11 +302,11 @@ public class Volume {
             Main.goToMainMenu();
         }
         System.out.println();
-        System.out.println("Total liquid amount is: " + Conversions.round((double) liquidWeight / 227.00,
-                2) + " cup(s)");
+        System.out.println("Total liquid amount is: " + Conversions.decimalToVolume(Conversions.round(
+                (double) liquidWeight / 227.00,2)));
         System.out.println();
-        System.out.println("Total flour amount is: " + Conversions.round((double) flourWeight / 120.00, 2)
-                + " cups");
+        System.out.println("Total flour amount is: " + Conversions.decimalToVolume(Conversions.round(
+                (double) flourWeight / 120.00, 2)));
         initialHydration = Math.round(((double) liquidWeight / (double) flourWeight) * 100);
         System.out.println();
         System.out.println("Initial hydration % is: " + (int) initialHydration + "%");
@@ -315,21 +315,22 @@ public class Volume {
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
             newLiquidWeight = liquidWeight + getMoreLiquid(flourWeight, liquidWeight);
-            System.out.println("You will need to add " + Conversions.round((double) getMoreLiquid(flourWeight,
-                    liquidWeight) / 227.00,2) +
-                    " cup(s) of additional liquid to your recipe, \nfor a total of " +
-                    Conversions.round(newLiquidWeight / 227.0,2) + " cup(s)");
+            System.out.println("You will need to add " + Conversions.decimalToVolume(Conversions.round(
+                    (double) getMoreLiquid(flourWeight, liquidWeight) / 227.00, 2)) +
+                    " of additional liquid to your recipe, \nfor a total of " +
+                    Conversions.decimalToVolume(Conversions.round(newLiquidWeight / 227.0, 2)));
             System.out.println();
-            System.out.println("Amounts for the slurry:\n" + Conversions.round(getFlourSlurry(flourWeight)/120.0,
-                    2) + " cups flour\n" + Conversions.round(getLiquidSlurry(flourWeight)/120.0,2) +
-                    " cups liquid");
+            System.out.println("Amounts for the slurry:\n" + Conversions.decimalToVolume(Conversions.round(
+                    getFlourSlurry(flourWeight) / 120.0,2)) + " flour\n" +
+                    Conversions.decimalToVolume(Conversions.round(getLiquidSlurry(flourWeight) / 227.0, 2))
+                    + " liquid");
         } else {
             System.out.println("You have a high enough hydration percentage, you do not need to alter anything");
             System.out.println();
-            System.out.println("Amounts for the slurry:\n" + Conversions.round(flourWeight * 0.075/120.0,
-                    2) +
-                    " cup(s) flour\n" + Conversions.round(((flourWeight * 0.075)/227.0) * 5, 2) //FIXME this is not calculating correctly
-                    + " cup(s) liquid");
+            System.out.println("Amounts for the slurry:\n" + Conversions.decimalToVolume(Conversions.round(
+                    flourWeight * 0.075 / 120.0,2)) + " flour\n" +
+                    Conversions.decimalToVolume(Conversions.round(((flourWeight * 0.075) / 227.0) * 5, 2))
+                    + " liquid");
         }
         goToPrintMenu();
     }
@@ -345,4 +346,5 @@ public class Volume {
     public static int getLiquidSlurry(int flourWeight) {
         return getFlourSlurry(flourWeight) * 5;
     }
+
 }

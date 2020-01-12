@@ -1,16 +1,6 @@
 public class Conversions {
     //TODO evaluate if this class is necessary
 
-    public static final double TBSP_1 = 0.0625;
-    public static final double TBSP_2 = TBSP_1 * 2;
-    public static final double TBSP_3 = TBSP_1 * 3;
-    public static final double TBSP_4 = TBSP_1 * 4;
-    public static final double TBSP_5 = TBSP_1 * 5;
-    public static final double TBSP_6 = TBSP_1 * 6;
-    public static final double TBSP_7 = TBSP_1 * 7;
-    public static final double TBSP_8 = TBSP_1 * 8;
-    public static final double TBSP_9 = TBSP_1 * 9;
-
     // Each double below is the % of water in each ingredient
     public static final double MILK = 0.87;
     public static final double EGGS = 0.74;
@@ -30,36 +20,35 @@ public class Conversions {
     public static final double MOLASSES_1_TBSP = 21.25;
 
 
-
-    public static int convertMilkToGrams(int numOfCups) {
+    public static int milkToGrams(int numOfCups) {
         return (numOfCups * MILK_1_CUP);
     }
 
-    public static int convertFlourToGrams(int numOfCups) {
+    public static int flourToGrams(int numOfCups) {
         return (numOfCups * FLOUR_1_CUP);
     }
 
-    public static int convertWaterToGrams(int numOfCups) {
+    public static int waterToGrams(int numOfCups) {
         return (numOfCups * WATER_1_CUP);
     }
 
-    public static int convertEggsToGrams(int numOfEggs) {
+    public static int eggsToGrams(int numOfEggs) {
         return (numOfEggs * EGGS_WHOLE_1);
     }
 
-    public static double convertButterToGrams(int numOfTbsp) {
+    public static double butterToGrams(int numOfTbsp) {
         return (numOfTbsp * BUTTER_1_TBSP);
     }
 
-    public static int convertHoneyToGrams(int numOfTbsp) {
+    public static int honeyToGrams(int numOfTbsp) {
         return (numOfTbsp * HONEY_1_TBSP);
     }
 
-    public static double convertSyrupToGrams(int numOfTbsp) {
+    public static double syrupToGrams(int numOfTbsp) {
         return (numOfTbsp * SYRUP_1_TBSP);
     }
 
-    public static double convertMolassesToGrams(int numOfTbsp) {
+    public static double molassesToGrams(int numOfTbsp) {
         return (numOfTbsp * MOLASSES_1_TBSP);
     }
 
@@ -71,4 +60,61 @@ public class Conversions {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+
+    public static String decimalToVolume(double volume) {
+        int cups = (int) volume;
+        double remainder = volume - cups;
+        String conversion = "";
+        if (volume <= 1.03124) {
+            if (volume >= 0.03125 && volume <= 0.09374) {
+                conversion = "1 tablespoon";
+            } else if (volume >= 0.09375 && volume <= 0.15624) {
+                conversion = "2 tablespoons";
+            } else if (volume >= 0.15625 && volume <= 0.21874) {
+                conversion = "3 tablespoons";
+            } else if (volume >= 0.21875 && volume <= 0.28124) {
+                conversion = "1/4 cup";
+            } else if (volume >= 0.28125 && volume <= 0.34374) {
+                conversion = "1/4 cup + 1 tablespoon";
+            } else if (volume >= 0.3475 && volume <= 0.40624) {
+                conversion = "1/4 cup + 2 tablespoons";
+            } else if (volume >= 0.40625 && volume <= 0.46874) {
+                conversion = "1/4 cup + 3 tablespoons";
+            } else if (volume >= 0.46875 && volume <= 0.53124) {
+                conversion = "1/2 cup";
+            } else if (volume >= 0.53125 && volume <= 0.59374) {
+                conversion = "1/2 cup + 1 tablespoon";
+            } else if (volume >= 0.59375 && volume <= 0.65624) {
+                conversion = "1/2 cup + 2 tablespoons";
+            } else if (volume >= 0.65625 && volume <= 0.71874) {
+                conversion = "1/2 cup + 3 tablespoons";
+            } else if (volume >= 0.71875 && volume <= 0.78124) {
+                conversion = "3/4 cup";
+            } else if (volume >= 0.78125 && volume <= 0.84374) {
+                conversion = "3/4 cup + 1 tablespoon";
+            } else if (volume >= 0.84375 && volume <= 0.90624) {
+                conversion = "3/4 cup + 2 tablespoons";
+            } else if (volume >= 0.90625 && volume <= 0.96874) {
+                conversion = "3/4 cup + 3 tablespoons";
+            } else if (volume >= 0.96875 && volume <= 1.03124) {
+                conversion = "1 cup";
+            }
+        } else if (volume >= 1.03125 && volume <= 1.21874) { // >= 1 cup + 1 tbsp && <= 1 cup + 3 tbsp
+            conversion = cups + " cup + " + decimalToVolume(remainder);
+        } else if (cups == 1 && remainder <= .03124) { // one even cup
+            conversion = cups + " cup" + decimalToVolume(remainder);
+        } else if (cups >= 2 && remainder <= .03124) { // at least 2 even cups
+            conversion = cups + " cups" + decimalToVolume(remainder);
+        } else if (cups >= 1 && remainder >= .21875) { // at least one cup && at least 1/4 cup remainder
+            conversion = cups + " & " + decimalToVolume(remainder);
+        } else if (cups >= 2 && remainder >= 0.03125 && remainder <= 0.21874) { // >= 2+ cups + 1 tbsp && <= 2+ cups + 3 tbsp
+            conversion = cups + " cups + " + decimalToVolume(remainder);
+        } else {
+            conversion = "--Error: unable to compute volume measurement--";
+        }
+
+        return conversion;
+    }
 }
+
+

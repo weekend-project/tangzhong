@@ -36,7 +36,8 @@ public class Menu {
         int maxLength = 0; // this will be updated next
         for (String optionName : optionNames) { // iterates for the same amount of optionNames
             if (maxLength < getOptionLength(optionName)) {
-                maxLength = getOptionLength(optionName); // changes maxLength to the longest option name + separator + optionNum
+                // changes maxLength to the longest option name + separator + optionNum
+                maxLength = getOptionLength(optionName);
             }
         }
         for (int i = 0; i < optionNames.size(); i++) { // this repeatedly calls the below method for each optionName
@@ -194,14 +195,17 @@ public class Menu {
     public static void drawRowWithOption(char outsideChar, char inCharLeft, char inCharRight, String optionName,
                                          char optionNum, int width, int maxLength) {
 
-        // LAST LEFT OFF, trying to figure out how to get the max length when calling this method x times
-        int optionLength = optionName.length() + separator.length() + 1; // the + 1 is to account for the length of the char
+        //FIXME if the title is even, and the the only optionLengths are odd, those rows are 1 character too long
+        // - I suspect it has something to do with the + 1 in line 213
+
+        int optionLength = optionName.length() + separator.length() + 1; // + 1 is to account for the length of the char
         int difference = maxLength - optionLength;
         String space = "";
         for (int i = 0; i < difference; i++) {
             space += " ";
         }
-        int lengthOfOption = (space.length() + optionName.length() + separator.length() + Integer.toString(optionNum).length());
+        int lengthOfOption = (space.length() + optionName.length() + separator.length() +
+                Integer.toString(optionNum).length());
         System.out.print(outsideChar);
         for (int i = 0; i < (width - lengthOfOption) / 2; i++) {
             System.out.print(inCharLeft);
