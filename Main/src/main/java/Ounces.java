@@ -1,14 +1,15 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Grams {
-    private static int liquidWeight;
-    private static int flourWeight;
+public class Ounces {
+
+    private static double liquidWeight;
+    private static double flourWeight;
     private static double initialHydration;
     private static double newLiquidWeight;
     private static Scanner reader = new Scanner(System.in);
-    private static Menu grams = new Menu();
-    private static String gramsBanner = "ingredient weights in grams";
+    private static Menu imperial = new Menu();
+    private static String imperialBanner = "ingredient weights in ounces";
     private static int timesChoseWater;
     private static int timesChoseMilk;
     private static int timesChoseEggs;
@@ -18,33 +19,33 @@ public class Grams {
     private static int timesChoseMolasses;
     private static int timesChoseFlour;
 
-    public static void gotoGramsMenu() throws IOException {
-        Menu.drawMenu(grams.charsTitle, grams.charsBanner, grams.charsRow, Menu.TITLE, gramsBanner,
+    public static void gotoOuncesMenu() throws IOException {
+        Menu.drawMenu(imperial.charsTitle, imperial.charsBanner, imperial.charsRow, Menu.TITLE, imperialBanner,
                 Menu.setOptionNames("water", "milk", "eggs", "butter", "honey", "syrup", "molasses", "flour",
                         "continue", "back"),
                 Menu.setOptionNumbers('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'), Menu.width);
         System.out.print("Enter your choice here: ");
-        int userGramsChoice = reader.nextInt();
+        int userImperialChoice = reader.nextInt();
 
-        if (userGramsChoice == 0) {
+        if (userImperialChoice == 0) {
             Main.goToMainMenu();
-        } else if (userGramsChoice == 1) {
+        } else if (userImperialChoice == 1) {
             gotoWater();
-        } else if (userGramsChoice == 2) {
+        } else if (userImperialChoice == 2) {
             gotoMilk();
-        } else if (userGramsChoice == 3) {
+        } else if (userImperialChoice == 3) {
             gotoEggs();
-        } else if (userGramsChoice == 4) {
+        } else if (userImperialChoice == 4) {
             gotoButter();
-        } else if (userGramsChoice == 5) {
+        } else if (userImperialChoice == 5) {
             gotoHoney();
-        } else if (userGramsChoice == 6) {
+        } else if (userImperialChoice == 6) {
             gotoSyrup();
-        } else if (userGramsChoice == 7) {
+        } else if (userImperialChoice == 7) {
             gotoMolasses();
-        } else if (userGramsChoice == 8) {
+        } else if (userImperialChoice == 8) {
             gotoFlour();
-        } else if (userGramsChoice == 9) {
+        } else if (userImperialChoice == 9) {
             getRouxAmounts();
         } else {
             Main.goToMainMenu();
@@ -62,16 +63,16 @@ public class Grams {
                 moreFlour = reader.nextInt();
             }
             if (moreFlour == 1) {
-                System.out.print("Enter the amount of flour in grams: ");
+                System.out.print("Enter the amount of flour in ounces: ");
                 timesChoseFlour++;
-                flourWeight += reader.nextInt();
+                flourWeight += reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of all flour in grams: ");
+        System.out.print("Enter the amount of all flour in ounces: ");
         timesChoseFlour++;
-        flourWeight = reader.nextInt();
-        gotoGramsMenu();
+        flourWeight = reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
+        gotoOuncesMenu();
     }
 
     public static void gotoWater() throws IOException {
@@ -87,16 +88,16 @@ public class Grams {
                 moreWater = reader.nextInt();
             }
             if (moreWater == 1) {
-                System.out.print("Enter the amount of water in grams: ");
+                System.out.print("Enter the amount of water in ounces: ");
                 timesChoseWater++;
-                liquidWeight += reader.nextInt();
+                liquidWeight += reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of water in grams: ");
+        System.out.print("Enter the amount of water in ounces: ");
         timesChoseWater++;
-        liquidWeight += reader.nextInt();
-        gotoGramsMenu();
+        liquidWeight += reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
+        gotoOuncesMenu();
     }
 
     public static void gotoMilk() throws IOException {
@@ -111,20 +112,20 @@ public class Grams {
                 moreMilk = reader.nextInt();
             }
             if (moreMilk == 1) {
-                System.out.print("Enter the amount of milk in grams: ");
+                System.out.print("Enter the amount of milk in ounces: ");
                 timesChoseMilk++;
 
                 //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
-                liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MILK);
+                liquidWeight += (reader.nextDouble() * Conversions.OUNCE_IN_GRAMS) * Conversions.MILK;
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of milk in grams: ");
+        System.out.print("Enter the amount of milk in ounces: ");
         timesChoseMilk++;
 
         //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MILK);
-        gotoGramsMenu();
+        liquidWeight += (reader.nextDouble() * Conversions.OUNCE_IN_GRAMS) * Conversions.MILK;
+        gotoOuncesMenu();
     }
 
     public static void gotoEggs() throws IOException {
@@ -139,26 +140,26 @@ public class Grams {
                 moreEggs = reader.nextInt();
             }
             if (moreEggs == 1) {
-                System.out.print("Enter the number of whole eggs: ");
+                System.out.print("Enter the number of whole eggs, using .5 per one yolk: ");
                 timesChoseEggs++;
 
                 /*
                     takes current liquidWeight + (whatever the user enters * 50) * 0.74, rounds and casts to an int
                     user input * 50 because one egg weighs about 50g
                  */
-                liquidWeight += (int) Math.round((reader.nextInt() * 50) * Conversions.EGGS);
+                liquidWeight += ((reader.nextDouble() * Conversions.EGGS_WHOLE_1) * Conversions.EGGS);
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the number of whole eggs: ");
+        System.out.print("Enter the number of whole eggs, using .5 per one yolk: ");
         timesChoseEggs++;
 
         /*
            takes current liquidWeight + (whatever the user enters * 50) * 0.74, rounds and casts to an int
            user input * 50 because one egg weighs about 50g
         */
-        liquidWeight += (int) Math.round((reader.nextInt() * 50) * Conversions.EGGS);
-        gotoGramsMenu();
+        liquidWeight += ((reader.nextDouble() * Conversions.EGGS_WHOLE_1) * Conversions.EGGS);
+        gotoOuncesMenu();
     }
 
     public static void gotoButter() throws IOException {
@@ -173,16 +174,16 @@ public class Grams {
                 moreButter = reader.nextInt();
             }
             if (moreButter == 1) {
-                System.out.print("Enter the amount of butter in grams: ");
+                System.out.print("Enter the amount of butter in tablespoons: ");
                 timesChoseButter++;
-                liquidWeight += (int) Math.round(reader.nextInt() * Conversions.BUTTER);
+                liquidWeight += (reader.nextDouble() * Conversions.BUTTER_1_TBSP) * Conversions.BUTTER;
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of butter in grams: ");
+        System.out.print("Enter the amount of butter in tablespoons: ");
         timesChoseButter++;
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.BUTTER);
-        gotoGramsMenu();
+        liquidWeight += (reader.nextDouble() * Conversions.BUTTER_1_TBSP) * Conversions.BUTTER;
+        gotoOuncesMenu();
     }
 
     public static void gotoHoney() throws IOException {
@@ -197,16 +198,16 @@ public class Grams {
                 moreHoney = reader.nextInt();
             }
             if (moreHoney == 1) {
-                System.out.print("Enter the amount of honey in grams: ");
+                System.out.print("Enter the amount of honey in tablespoons: ");
                 timesChoseHoney++;
-                liquidWeight += (int) Math.round(reader.nextInt() * Conversions.HONEY);
+                liquidWeight += ((reader.nextDouble() * Conversions.HONEY_1_TBSP) * Conversions.HONEY);
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of honey in grams: ");
+        System.out.print("Enter the amount of honey in tablespoons: ");
         timesChoseHoney++;
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.HONEY);
-        gotoGramsMenu();
+        liquidWeight += ((reader.nextDouble() * Conversions.HONEY_1_TBSP) * Conversions.HONEY);
+        gotoOuncesMenu();
     }
 
     public static void gotoSyrup() throws IOException {
@@ -214,23 +215,23 @@ public class Grams {
             System.out.println("You already entered syrup " + timesChoseSyrup + " time(s), are you sure you " +
                     "want to enter more syrup?");
             System.out.print("Type 1 for yes, or 0 for no: ");
-            int moreMilk = reader.nextInt();
+            int moreSyrup = reader.nextInt();
 
-            while (moreMilk < 0 || moreMilk > 1) {
+            while (moreSyrup < 0 || moreSyrup > 1) {
                 System.out.print("You must enter either 1 for yes, or 0 for no: ");
-                moreMilk = reader.nextInt();
+                moreSyrup = reader.nextInt();
             }
-            if (moreMilk == 1) {
-                System.out.print("Enter the amount of syrup in grams: ");
+            if (moreSyrup == 1) {
+                System.out.print("Enter the amount of syrup in tablespoons: ");
                 timesChoseSyrup++;
-                liquidWeight += (int) Math.round(reader.nextInt() * Conversions.SYRUP);
+                liquidWeight += ((reader.nextDouble() * Conversions.SYRUP_1_TBSP) * Conversions.SYRUP);
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of syrup in grams: ");
+        System.out.print("Enter the amount of syrup in tablespoons: ");
         timesChoseSyrup++;
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.SYRUP);
-        gotoGramsMenu();
+        liquidWeight += ((reader.nextDouble() * Conversions.SYRUP_1_TBSP) * Conversions.SYRUP);
+        gotoOuncesMenu();
     }
 
     public static void gotoMolasses() throws IOException {
@@ -238,34 +239,33 @@ public class Grams {
             System.out.println("You already entered molasses " + timesChoseMolasses + " time(s), are you sure you " +
                     "want to enter more molasses?");
             System.out.print("Type 1 for yes, or 0 for no: ");
-            int moreMilk = reader.nextInt();
+            int moreMolasses = reader.nextInt();
 
             // catches invalid input
-            while (moreMilk < 0 || moreMilk > 1) {
+            while (moreMolasses < 0 || moreMolasses > 1) {
                 System.out.print("You must enter either 1 for yes, or 0 for no: ");
-                moreMilk = reader.nextInt();
+                moreMolasses = reader.nextInt();
             }
-            if (moreMilk == 1) {
-                System.out.print("Enter the amount of molasses in grams: ");
+            if (moreMolasses == 1) {
+                System.out.print("Enter the amount of molasses in tablespoons: ");
                 timesChoseMolasses++;
-                liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MOLASSES);
+                liquidWeight += ((reader.nextDouble() * Conversions.MOLASSES_1_TBSP) * Conversions.MOLASSES);
             }
-            gotoGramsMenu();
+            gotoOuncesMenu();
         }
-        System.out.print("Enter the amount of molasses in grams: ");
+        System.out.print("Enter the amount of molasses in tablespoons: ");
         timesChoseMolasses++;
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MOLASSES);
-        gotoGramsMenu();
+        liquidWeight += ((reader.nextDouble() * Conversions.MOLASSES_1_TBSP) * Conversions.MOLASSES);
+        gotoOuncesMenu();
     }
 
     public static void gotoPrintMenu() throws IOException {
-        Menu.drawMenu(grams.charsTitle, grams.charsBanner, grams.charsRow, Menu.TITLE, gramsBanner,
-                Menu.setOptionNames("save to pdf", "main menu"), Menu.setOptionNumbers('1', '0'),
-                Menu.width);
+        Menu.drawMenu(imperial.charsTitle, imperial.charsBanner, imperial.charsRow, Menu.TITLE, imperialBanner,
+                Menu.setOptionNames("save to pdf", "main menu"), Menu.setOptionNumbers('1', '0'), Menu.width);
         System.out.print("Enter your choice here: ");
         int userPrintMenuChoice = reader.nextInt();
         while (userPrintMenuChoice < 0 || userPrintMenuChoice > 1) {
-            Menu.drawMenu(grams.charsTitle, grams.charsBanner, grams.charsRow, Menu.TITLE, gramsBanner,
+            Menu.drawMenu(imperial.charsTitle, imperial.charsBanner, imperial.charsRow, Menu.TITLE, imperialBanner,
                     Menu.setOptionNames("print results", "new conversion", "exit"),
                     Menu.setOptionNumbers('1', '2', '0'),
                     Menu.width);
@@ -289,46 +289,67 @@ public class Grams {
             timesChoseFlour = 0;
             Main.goToMainMenu();
         } else {
-            Export.getPDF(getRouxFlourAmount(flourWeight) + "g",getRouxWaterAmount(flourWeight) + "g");
+            Export.getPDF(Double.toString(getRouxFlourAmount(flourWeight)) + " ounces",
+                    Double.toString(getRouxWaterAmount(flourWeight)) + " ounces");
+            //TODO I don't think these variables will ever be reached, need to clear these after printing results
+            liquidWeight = 0;
+            flourWeight = 0;
+            initialHydration = 0;
+            newLiquidWeight = 0;
+            timesChoseWater = 0;
+            timesChoseMilk = 0;
+            timesChoseEggs = 0;
+            timesChoseButter = 0;
+            timesChoseHoney = 0;
+            timesChoseSyrup = 0;
+            timesChoseMolasses = 0;
+            timesChoseFlour = 0;
         }
     }
 
     public static void getRouxAmounts() throws IOException {
+        liquidWeight = Conversions.round((liquidWeight / Conversions.OUNCE_IN_GRAMS),2);
+        flourWeight = Conversions.round((flourWeight / Conversions.OUNCE_IN_GRAMS),2);
+        initialHydration = Math.round((liquidWeight / flourWeight) * 100);
+        double additionalLiquid = getMoreLiquid(flourWeight, liquidWeight);
+        newLiquidWeight = Conversions.round((liquidWeight + additionalLiquid),2);
+
+
+
         System.out.println();
-        System.out.println("Total water amount is: " + liquidWeight + "g");
+        System.out.println("Total water amount is: " + liquidWeight + " ounces");
         System.out.println();
-        System.out.println("Total flour amount is: " + flourWeight + "g");
-        initialHydration = Math.round(((double) liquidWeight / (double) flourWeight) * 100);
+        System.out.println("Total flour amount is: " + flourWeight + " ounces");
         System.out.println();
         System.out.println("Initial hydration % is: " + (int) initialHydration + "%");
         if (initialHydration < 75.0) {
             System.out.println();
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
-            newLiquidWeight = liquidWeight + getMoreWater(flourWeight, liquidWeight);
-            System.out.println("You will need to add " + getMoreWater(flourWeight, liquidWeight) +
-                    "g additional water to your recipe, \nfor a total of " + (int) Math.round(newLiquidWeight) + "g");
+            System.out.println("You will need to add " + additionalLiquid + " ounces additional water to your " +
+                    "recipe, \nfor a total of " + newLiquidWeight + " ounces");
             System.out.println();
-            System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + "g flour\n" +
-                    getRouxWaterAmount(flourWeight) + "g water");
+            System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + " ounces flour\n" +
+                    getRouxWaterAmount(flourWeight) + " ounces water");
         } else {
             System.out.println("You have a high enough hydration percentage, you do not need to alter anything");
             System.out.println();
-            System.out.println("Amounts for the roux:\n" + (int) Math.round(flourWeight * Conversions.ROUX_PERCENT)
-                    + "g flour\n" + (int) Math.round((flourWeight * Conversions.ROUX_PERCENT) * 5) + "g liquid");
+            System.out.println("Amounts for the roux:\n" + Conversions.round((flourWeight * Conversions.ROUX_PERCENT),
+                    2) + " ounces flour\n" + Conversions.round(((flourWeight * Conversions.ROUX_PERCENT) * 5),
+                    2) + " ounces water");
         }
         gotoPrintMenu();
     }
 
-    public static int getMoreWater(int flourWeight, int liquidWeight) {
-        return (int) (Math.round(flourWeight * 0.75) - liquidWeight);
+    public static double getMoreLiquid(double flourWeight, double liquidWeight) {
+        return Conversions.round(((flourWeight * 0.75) - liquidWeight), 2);
     }
 
-    public static int getRouxFlourAmount(int flourWeight) {
-        return (int) Math.round(flourWeight * Conversions.ROUX_PERCENT);
+    public static double getRouxFlourAmount(double flourWeight) {
+        return Conversions.round((((flourWeight * Conversions.ROUX_PERCENT))), 2);
     }
 
-    public static int getRouxWaterAmount(int flourWeight) {
-        return getRouxFlourAmount(flourWeight) * 5;
+    public static double getRouxWaterAmount(double flourWeight) {
+        return Conversions.round((((getRouxFlourAmount(flourWeight) * 5))), 2);
     }
 }

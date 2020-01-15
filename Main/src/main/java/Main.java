@@ -1,9 +1,9 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-//TODO change option numbers to letters that correspond with option names
-
 //TODO do you really need to pass in the three char arrays for every call to drawMenu?
+
+//TODO create a method that clears all variable values upon request
 
 public class Main {
     private static Scanner reader = new Scanner(System.in);
@@ -22,7 +22,7 @@ public class Main {
             setOptionNames(<custom params here>) and setOptionNumbers(<custom params here>).
          */
         Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "main menu",
-                Menu.setOptionNames("metric", "imperial", "volume", "exit"), Menu.setOptionNumbers('1', '2', '3', '0'),
+                Menu.setOptionNames("grams", "ounces", "volume", "exit"), Menu.setOptionNumbers('1', '2', '3', '0'),
                 Menu.width);
 
         System.out.print("Enter your choice here: ");
@@ -34,7 +34,7 @@ public class Main {
 
         while (userMainChoice < 0 || userMainChoice > 3) {
             Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "main menu",
-                    Menu.setOptionNames("metric", "imperial", "volume", "exit"),
+                    Menu.setOptionNames("grams", "ounces", "volume", "exit"),
                     Menu.setOptionNumbers('1', '2', '3', '0'), 60);
             System.out.print("You must enter a valid option, try again: ");
             userMainChoice = reader.nextInt();
@@ -42,9 +42,9 @@ public class Main {
         }
 
         if (userMainChoice == 1) {
-            Grams.goToGramsMenu();
+            Grams.gotoGramsMenu();
         } else if (userMainChoice == 2) {
-            Imperial.temp();
+            Ounces.gotoOuncesMenu();
         } else if (userMainChoice == 3) {
             Menu.drawMenu(main.charsTitle, main.charsBanner, main.charsRow, Menu.TITLE, "Proceed?", Menu.setOptionNames("proceed", "go back"),
                     Menu.setOptionNumbers('1', '0'), Menu.width);
@@ -54,7 +54,7 @@ public class Main {
             System.out.print("Enter your choice here: ");
             int proceed = reader.nextInt();
             if (proceed == 1) {
-                Volume.goToVolumeMenu();
+                Volume.gotoVolumeMenu();
             }
             goToMainMenu();
         }

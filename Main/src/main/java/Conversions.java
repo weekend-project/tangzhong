@@ -1,7 +1,10 @@
 public class Conversions {
     //TODO evaluate if this class is necessary
 
-    // Each double below is the % of water in each ingredient
+    // The percentage of flour from the base recipe, should be between 5%-10%
+    public static final double ROUX_PERCENT = 0.06;
+
+    // The percentage of water in each ingredient
     public static final double MILK = 0.87;
     public static final double EGGS = 0.74;
     public static final double HONEY = 0.17;
@@ -9,7 +12,8 @@ public class Conversions {
     public static final double SYRUP = 0.33; // https://extension.psu.edu/from-the-woods-maple-syrup-a-taste-of-nature
     public static final double MOLASSES = 0.22; // https://en.wikipedia.org/wiki/Molasses
 
-    // Each var amount below is its weight in grams
+    // The weight in grams of each ingredient
+    public static final double OUNCE_IN_GRAMS = 28.3495;
     public static final int FLOUR_1_CUP = 120;
     public static final int WATER_1_CUP = 227;
     public static final int MILK_1_CUP = 227;
@@ -24,7 +28,7 @@ public class Conversions {
         return (numOfCups * MILK_1_CUP);
     }
 
-    public static int flourToGrams(int numOfCups) {
+    public static double flourToGrams(double numOfCups) {
         return (numOfCups * FLOUR_1_CUP);
     }
 
@@ -110,7 +114,7 @@ public class Conversions {
         } else if (cups >= 2 && remainder >= 0.03125 && remainder <= 0.21874) { // >= 2+ cups + 1 tbsp && <= 2+ cups + 3 tbsp
             conversion = cups + " cups + " + decimalToVolume(remainder);
         } else {
-            conversion = "--Error: unable to compute volume measurement--";
+            conversion = "Error: unable to compute volume measurement";
         }
 
         return conversion;
