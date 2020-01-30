@@ -33,6 +33,15 @@ public class Menu {
         drawTitle(charsTitle, title, width); // draws the title bar
         drawBanner(charsBanner, banner, width); // draws the banner bar
         drawRow(charsRow[0], charsRow[1], width); // draws a generic row
+        for (int i = 0; i < optionNames.size(); i++) { // this repeatedly calls the below method for each optionName
+            drawRowWithOption(charsRow[0], charsRow[1], charsRow[1], optionNames.get(i), optionNums.get(i), width,
+                    getMaxLength(optionNames));
+        }
+        drawRow(charsRow[0], charsRow[1], width); // draws generic row
+        drawRow(charsRow[0], charsRow[2], width); // draws generic row with different char so it closes the box
+    }
+
+    public static int getMaxLength(ArrayList<String> optionNames) {
         int maxLength = 0; // this will be updated next
         for (String optionName : optionNames) { // iterates for the same amount of optionNames
             if (maxLength < getOptionLength(optionName)) {
@@ -40,12 +49,7 @@ public class Menu {
                 maxLength = getOptionLength(optionName);
             }
         }
-        for (int i = 0; i < optionNames.size(); i++) { // this repeatedly calls the below method for each optionName
-            drawRowWithOption(charsRow[0], charsRow[1], charsRow[1], optionNames.get(i), optionNums.get(i), width,
-                    maxLength);
-        }
-        drawRow(charsRow[0], charsRow[1], width); // draws generic row
-        drawRow(charsRow[0], charsRow[2], width); // draws generic row with different char so it closes the box
+        return maxLength;
     }
 
     /** --- drawTitle method ---
@@ -76,7 +80,7 @@ public class Menu {
             }
             System.out.println(charsTitle[0]);
 
-        // if the length of the title is odd and the int width is even
+            // if the length of the title is odd and the int width is even
         } else if (title.length() % 2 != 0 && width % 2 == 0) {
             System.out.print(charsTitle[0]);
             for (int i = 1; i <= (width - title.length()) / 2; i++) {
@@ -90,7 +94,7 @@ public class Menu {
             }
             System.out.println(charsTitle[0]);
 
-        // if the length of the title is even and the int width is odd
+            // if the length of the title is even and the int width is odd
         } else if (title.length() % 2 == 0) {
             System.out.print(charsTitle[0]);
             for (int i = 1; i < (width - title.length()) / 2; i++) {
@@ -104,7 +108,7 @@ public class Menu {
             }
             System.out.println(charsTitle[0]);
 
-        // if the length of the title is odd and the int width is odd
+            // if the length of the title is odd and the int width is odd
         } else {
             System.out.print(charsTitle[0]);
             for (int i = 1; i < (width - title.length()) / 2; i++) {
@@ -195,28 +199,32 @@ public class Menu {
     public static void drawRowWithOption(char outsideChar, char inCharLeft, char inCharRight, String optionName,
                                          char optionNum, int width, int maxLength) {
 
-        //FIXME if the title is even, and the the only optionLengths are odd, those rows are 1 character too long
-        // - I suspect it has something to do with the + 1 in line 213
-
-        int optionLength = optionName.length() + separator.length() + 1; // + 1 is to account for the length of the char
+        int optionLength = optionName.length() + separator.length() + 1; // + 1 is to account for the length of the char optionNum
         int difference = maxLength - optionLength;
         String space = "";
         for (int i = 0; i < difference; i++) {
             space += " ";
         }
-        int lengthOfOption = (space.length() + optionName.length() + separator.length() +
-                Integer.toString(optionNum).length());
+        int lengthOfOption = (space.length() + optionName.length() + separator.length() + 1);
         System.out.print(outsideChar);
         for (int i = 0; i < (width - lengthOfOption) / 2; i++) {
             System.out.print(inCharLeft);
         }
         System.out.print(space + optionName.toUpperCase() + separator + optionNum);
-        if (width % 2 == 0) {
-            for (int i = 0; i <= ((width - lengthOfOption) / 2) + 1; i++) {
+        if (width % 2 == 0 && lengthOfOption % 2 == 0) {
+            for (int i = 1; i <= ((width - lengthOfOption) / 2); i++) {
+                System.out.print(inCharRight);
+            }
+        } else if (width % 2 != 0 && lengthOfOption % 2 == 0){
+            for (int i = 0; i <= ((width - lengthOfOption) / 2); i++) {
+                System.out.print(inCharRight);
+            }
+        } else if (width % 2 == 0){
+            for (int i = 0; i <= ((width - lengthOfOption)/ 2); i++) {
                 System.out.print(inCharRight);
             }
         } else {
-            for (int i = 0; i <= (width - lengthOfOption) / 2; i++) {
+            for (int i = 1; i <= ((width - lengthOfOption) / 2); i++) {
                 System.out.print(inCharRight);
             }
         }
