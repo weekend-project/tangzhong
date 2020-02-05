@@ -17,6 +17,8 @@ public class Grams {
     private static int timesChoseSyrup;
     private static int timesChoseMolasses;
     private static int timesChoseFlour;
+    private static int justMilk;
+    private static int justWater;
 
     public static void gotoGramsMenu() throws IOException {
         Menu.drawMenu(grams.charsTitle, grams.charsBanner, grams.charsRow, Menu.TITLE, gramsBanner,
@@ -89,13 +91,15 @@ public class Grams {
             if (moreWater == 1) {
                 System.out.print("Enter the amount of water in grams: ");
                 timesChoseWater++;
-                liquidWeight += reader.nextInt();
+                justWater += reader.nextInt();
+                liquidWeight += justWater;
             }
             gotoGramsMenu();
         }
         System.out.print("Enter the amount of water in grams: ");
         timesChoseWater++;
-        liquidWeight += reader.nextInt();
+        justWater += reader.nextInt();
+        liquidWeight += justWater;
         gotoGramsMenu();
     }
 
@@ -113,17 +117,14 @@ public class Grams {
             if (moreMilk == 1) {
                 System.out.print("Enter the amount of milk in grams: ");
                 timesChoseMilk++;
-
-                //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
                 liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MILK);
             }
             gotoGramsMenu();
         }
         System.out.print("Enter the amount of milk in grams: ");
         timesChoseMilk++;
-
-        //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
-        liquidWeight += (int) Math.round(reader.nextInt() * Conversions.MILK);
+        justMilk = reader.nextInt();
+        liquidWeight += (int) Math.round(justMilk * Conversions.MILK);
         gotoGramsMenu();
     }
 
@@ -266,8 +267,7 @@ public class Grams {
         int userPrintMenuChoice = reader.nextInt();
         while (userPrintMenuChoice < 0 || userPrintMenuChoice > 1) {
             Menu.drawMenu(grams.charsTitle, grams.charsBanner, grams.charsRow, Menu.TITLE, gramsBanner,
-                    Menu.setOptionNames("print results", "new conversion", "exit"),
-                    Menu.setOptionNumbers('1', '2', '0'),
+                    Menu.setOptionNames("save to pdf", "main menu"), Menu.setOptionNumbers('1', '0'),
                     Menu.width);
             System.out.println("Invalid, try again");
             System.out.println();
@@ -275,18 +275,7 @@ public class Grams {
             userPrintMenuChoice = reader.nextInt();
         }
         if (userPrintMenuChoice == 0) {
-            liquidWeight = 0;
-            flourWeight = 0;
-            initialHydration = 0;
-            newLiquidWeight = 0;
-            timesChoseWater = 0;
-            timesChoseMilk = 0;
-            timesChoseEggs = 0;
-            timesChoseButter = 0;
-            timesChoseHoney = 0;
-            timesChoseSyrup = 0;
-            timesChoseMolasses = 0;
-            timesChoseFlour = 0;
+            clearAll();
             Main.goToMainMenu();
         } else {
             Export.getPDF(getRouxFlourAmount(flourWeight) + "g",getRouxWaterAmount(flourWeight) + "g");
@@ -295,22 +284,37 @@ public class Grams {
 
     public static void getRouxAmounts() throws IOException {
         System.out.println();
-        System.out.println("Total water amount is: " + liquidWeight + "g");
+        if (justMilk >= justWater) {
+            System.out.println("Total liquid amount is: " + (justMilk + justWater) + "g"); // should print only if more milk than water
+            initialHydration = Math.round(((double) (justMilk + justWater) / (double) flourWeight) * 100);
+        } else {
+            System.out.println("Total liquid amount is: " + liquidWeight + "g"); // should print only if more water than milk
+            initialHydration = Math.round(((double) liquidWeight / (double) flourWeight) * 100);
+        }
         System.out.println();
         System.out.println("Total flour amount is: " + flourWeight + "g");
-        initialHydration = Math.round(((double) liquidWeight / (double) flourWeight) * 100);
+
         System.out.println();
         System.out.println("Initial hydration % is: " + (int) initialHydration + "%");
         if (initialHydration < 75.0) {
             System.out.println();
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
-            newLiquidWeight = liquidWeight + getMoreWater(flourWeight, liquidWeight);
-            System.out.println("You will need to add " + getMoreWater(flourWeight, liquidWeight) +
-                    "g additional water to your recipe, \nfor a total of " + (int) Math.round(newLiquidWeight) + "g");
-            System.out.println();
-            System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + "g flour\n" +
-                    getRouxWaterAmount(flourWeight) + "g water");
+            if (justMilk >= justWater) {
+                newLiquidWeight = (justMilk + justWater)+ getMoreWater(flourWeight, (justMilk + justWater));
+                System.out.println("You will need to add " + getMoreWater(flourWeight, (justMilk + justWater)) +
+                        "g additional milk to your recipe, \nfor a total of " + (int) Math.round(newLiquidWeight) + "g");
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + "g flour\n" +
+                        getRouxWaterAmount(flourWeight) + "g milk");
+            } else {
+                newLiquidWeight = liquidWeight + getMoreWater(flourWeight, liquidWeight);
+                System.out.println("You will need to add " + getMoreWater(flourWeight, liquidWeight) +
+                        "g additional water to your recipe, \nfor a total of " + (int) Math.round(newLiquidWeight) + "g");
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + "g flour\n" +
+                        getRouxWaterAmount(flourWeight) + "g water");
+            }
         } else {
             System.out.println("You have a high enough hydration percentage, you do not need to alter anything");
             System.out.println();
@@ -330,5 +334,22 @@ public class Grams {
 
     public static int getRouxWaterAmount(int flourWeight) {
         return getRouxFlourAmount(flourWeight) * 5;
+    }
+
+    public static void clearAll() {
+        liquidWeight = 0;
+        flourWeight = 0;
+        initialHydration = 0;
+        newLiquidWeight = 0;
+        timesChoseWater = 0;
+        timesChoseMilk = 0;
+        timesChoseEggs = 0;
+        timesChoseButter = 0;
+        timesChoseHoney = 0;
+        timesChoseSyrup = 0;
+        timesChoseMolasses = 0;
+        timesChoseFlour = 0;
+        justMilk = 0;
+        justWater = 0;
     }
 }

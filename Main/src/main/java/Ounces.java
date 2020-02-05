@@ -18,6 +18,8 @@ public class Ounces {
     private static int timesChoseSyrup;
     private static int timesChoseMolasses;
     private static int timesChoseFlour;
+    private static double justMilk;
+    private static double justWater;
 
     public static void gotoOuncesMenu() throws IOException {
         Menu.drawMenu(imperial.charsTitle, imperial.charsBanner, imperial.charsRow, Menu.TITLE, imperialBanner,
@@ -90,13 +92,15 @@ public class Ounces {
             if (moreWater == 1) {
                 System.out.print("Enter the amount of water in ounces: ");
                 timesChoseWater++;
-                liquidWeight += reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
+                justWater += reader.nextDouble();
+                liquidWeight += justWater * Conversions.OUNCE_IN_GRAMS;
             }
             gotoOuncesMenu();
         }
         System.out.print("Enter the amount of water in ounces: ");
         timesChoseWater++;
-        liquidWeight += reader.nextDouble() * Conversions.OUNCE_IN_GRAMS;
+        justWater += reader.nextDouble();
+        liquidWeight += justWater * Conversions.OUNCE_IN_GRAMS;
         gotoOuncesMenu();
     }
 
@@ -114,17 +118,14 @@ public class Ounces {
             if (moreMilk == 1) {
                 System.out.print("Enter the amount of milk in ounces: ");
                 timesChoseMilk++;
-
-                //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
                 liquidWeight += (reader.nextDouble() * Conversions.OUNCE_IN_GRAMS) * Conversions.MILK;
             }
             gotoOuncesMenu();
         }
         System.out.print("Enter the amount of milk in ounces: ");
         timesChoseMilk++;
-
-        //takes current liquidWeight + (whatever the user enters) * 0.87, rounds and casts to an int
-        liquidWeight += (reader.nextDouble() * Conversions.OUNCE_IN_GRAMS) * Conversions.MILK;
+        justMilk = reader.nextDouble();
+        liquidWeight += (justMilk * Conversions.OUNCE_IN_GRAMS) * Conversions.MILK;
         gotoOuncesMenu();
     }
 
@@ -275,49 +276,26 @@ public class Ounces {
             userPrintMenuChoice = reader.nextInt();
         }
         if (userPrintMenuChoice == 0) {
-            liquidWeight = 0;
-            flourWeight = 0;
-            initialHydration = 0;
-            newLiquidWeight = 0;
-            timesChoseWater = 0;
-            timesChoseMilk = 0;
-            timesChoseEggs = 0;
-            timesChoseButter = 0;
-            timesChoseHoney = 0;
-            timesChoseSyrup = 0;
-            timesChoseMolasses = 0;
-            timesChoseFlour = 0;
+            clearAll();
             Main.goToMainMenu();
         } else {
             Export.getPDF(Double.toString(getRouxFlourAmount(flourWeight)) + " ounces",
                     Double.toString(getRouxWaterAmount(flourWeight)) + " ounces");
-            //TODO I don't think these variables will ever be reached, need to clear these after printing results
-            liquidWeight = 0;
-            flourWeight = 0;
-            initialHydration = 0;
-            newLiquidWeight = 0;
-            timesChoseWater = 0;
-            timesChoseMilk = 0;
-            timesChoseEggs = 0;
-            timesChoseButter = 0;
-            timesChoseHoney = 0;
-            timesChoseSyrup = 0;
-            timesChoseMolasses = 0;
-            timesChoseFlour = 0;
         }
     }
 
     public static void getRouxAmounts() throws IOException {
         liquidWeight = Conversions.round((liquidWeight / Conversions.OUNCE_IN_GRAMS),2);
         flourWeight = Conversions.round((flourWeight / Conversions.OUNCE_IN_GRAMS),2);
-        initialHydration = Math.round((liquidWeight / flourWeight) * 100);
-        double additionalLiquid = getMoreLiquid(flourWeight, liquidWeight);
-        newLiquidWeight = Conversions.round((liquidWeight + additionalLiquid),2);
-
-
 
         System.out.println();
-        System.out.println("Total water amount is: " + liquidWeight + " ounces");
+        if (justMilk >= justWater) {
+            System.out.println("Total liquid amount is: " + (justMilk + justWater) + " ounces");
+            initialHydration = Math.round(((justMilk + justWater) / flourWeight) * 100);
+        } else {
+            System.out.println("Total water amount is: " + liquidWeight + " ounces");
+            initialHydration = Math.round((liquidWeight / flourWeight) * 100);
+        }
         System.out.println();
         System.out.println("Total flour amount is: " + flourWeight + " ounces");
         System.out.println();
@@ -326,17 +304,29 @@ public class Ounces {
             System.out.println();
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
-            System.out.println("You will need to add " + additionalLiquid + " ounces additional water to your " +
-                    "recipe, \nfor a total of " + newLiquidWeight + " ounces");
-            System.out.println();
-            System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + " ounces flour\n" +
-                    getRouxWaterAmount(flourWeight) + " ounces water");
+            if (justMilk >= justWater) {
+                double additionalLiquid = getMoreLiquid(flourWeight, (justMilk + justWater));
+                newLiquidWeight = Conversions.round(((justMilk + justWater) + additionalLiquid),2);
+                System.out.println("You will need to add " + additionalLiquid + " ounces additional milk to your " +
+                        "recipe, \nfor a total of " + newLiquidWeight + " ounces");
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + " ounces flour\n" +
+                        getRouxWaterAmount(flourWeight) + " ounces milk");
+            } else {
+                double additionalLiquid = getMoreLiquid(flourWeight, liquidWeight);
+                newLiquidWeight = Conversions.round((liquidWeight + additionalLiquid),2);
+                System.out.println("You will need to add " + additionalLiquid + " ounces additional water to your " +
+                        "recipe, \nfor a total of " + newLiquidWeight + " ounces");
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + getRouxFlourAmount(flourWeight) + " ounces flour\n" +
+                        getRouxWaterAmount(flourWeight) + " ounces water");
+            }
         } else {
             System.out.println("You have a high enough hydration percentage, you do not need to alter anything");
             System.out.println();
             System.out.println("Amounts for the roux:\n" + Conversions.round((flourWeight * Conversions.ROUX_PERCENT),
                     2) + " ounces flour\n" + Conversions.round(((flourWeight * Conversions.ROUX_PERCENT) * 5),
-                    2) + " ounces water");
+                    2) + " ounces liquid");
         }
         gotoPrintMenu();
     }
@@ -351,5 +341,22 @@ public class Ounces {
 
     public static double getRouxWaterAmount(double flourWeight) {
         return Conversions.round((((getRouxFlourAmount(flourWeight) * 5))), 2);
+    }
+
+    public static void clearAll() {
+        liquidWeight = 0;
+        flourWeight = 0;
+        initialHydration = 0;
+        newLiquidWeight = 0;
+        timesChoseWater = 0;
+        timesChoseMilk = 0;
+        timesChoseEggs = 0;
+        timesChoseButter = 0;
+        timesChoseHoney = 0;
+        timesChoseSyrup = 0;
+        timesChoseMolasses = 0;
+        timesChoseFlour = 0;
+        justMilk = 0;
+        justWater = 0;
     }
 }

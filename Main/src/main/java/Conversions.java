@@ -1,5 +1,4 @@
 public class Conversions {
-    //TODO evaluate if this class is necessary
 
     // The percentage of flour from the base recipe, should be between 5%-10%
     public static final double ROUX_PERCENT = 0.06;
@@ -116,7 +115,6 @@ public class Conversions {
         } else {
             conversion = "Error: unable to compute volume measurement";
         }
-
         return conversion;
     }
 }

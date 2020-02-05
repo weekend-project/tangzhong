@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-//TODO add method to change decimals into cups + tablespoons (so ~1.125 cups should be printed as 1 cup + 2 tbsp)
-
 public class Volume {
     public static double liquidWeight;
     public static double flourWeight;
@@ -20,6 +18,8 @@ public class Volume {
     private static int timesChoseSyrup;
     private static int timesChoseMolasses;
     private static int timesChoseFlour;
+    private static double justMilk;
+    private static double justWater;
 
     public static void gotoVolumeMenu() throws IOException {
         Menu.drawMenu(volume.charsTitle, volume.charsBanner, volume.charsRow, Menu.TITLE, volumeBanner,
@@ -92,13 +92,15 @@ public class Volume {
             if (moreWater == 1) {
                 System.out.print("Enter the amount of water in cups: ");
                 timesChoseWater++;
-                liquidWeight += (int) (reader.nextDouble() * 120);
+                justWater += reader.nextDouble();
+                liquidWeight += (int) (justWater * 227.0);
             }
             gotoVolumeMenu();
         }
         System.out.print("Enter the amount of water in cups: ");
         timesChoseWater++;
-        liquidWeight += (int) (reader.nextDouble() * 227);
+        justWater += reader.nextDouble();
+        liquidWeight += (int) (justWater * 227.0);
         gotoVolumeMenu();
     }
 
@@ -116,23 +118,14 @@ public class Volume {
             if (moreMilk == 1) {
                 System.out.print("Enter the amount of milk in cups: ");
                 timesChoseMilk++;
-
-                /*
-                    Takes current liquidWeight + (whatever the user enters converted to grams) * 0.87, rounds and casts
-                    to an int
-                 */
                 liquidWeight += (int) Math.round((reader.nextDouble() * 227) * Conversions.MILK);
             }
             gotoVolumeMenu();
         }
         System.out.print("Enter the amount of milk in cups: ");
         timesChoseMilk++;
-
-        /*
-            Takes current liquidWeight + (whatever the user enters converted to grams) * 0.87, rounds and casts
-            to an int
-         */
-        liquidWeight += (int) Math.round((reader.nextDouble() * 227) * Conversions.MILK);
+        justMilk = reader.nextDouble();
+        liquidWeight += justMilk * Conversions.MILK;
         gotoVolumeMenu();
     }
 
@@ -286,18 +279,7 @@ public class Volume {
             userPrintMenuChoice = reader.nextInt();
         }
         if (userPrintMenuChoice == 0) {
-            liquidWeight = 0;
-            flourWeight = 0;
-            initialHydration = 0;
-            newLiquidWeight = 0;
-            timesChoseWater = 0;
-            timesChoseMilk = 0;
-            timesChoseEggs = 0;
-            timesChoseButter = 0;
-            timesChoseHoney = 0;
-            timesChoseSyrup = 0;
-            timesChoseMolasses = 0;
-            timesChoseFlour = 0;
+            clearAll();
             Main.goToMainMenu();
         } else {
             Export.getPDF((Conversions.decimalToVolume(Conversions.round(
@@ -308,35 +290,55 @@ public class Volume {
 
     public static void getRouxAmounts() throws IOException {
         System.out.println();
-        System.out.println("Total water amount is: " + Conversions.decimalToVolume(Conversions.round(
-                (double) liquidWeight / 227.00, 2)));
+        if (justMilk >= justWater) {
+            System.out.println("Total liquid amount is: " + Conversions.decimalToVolume(Conversions.round(
+                    (justMilk + justWater), 2)));
+            initialHydration = Math.round((((justMilk + justWater) * 227.0) / flourWeight) * 100);
+        } else {
+            System.out.println("Total water amount is: " + Conversions.decimalToVolume(Conversions.round(
+                    liquidWeight / 227.00, 2)));
+            initialHydration = Math.round((liquidWeight / flourWeight) * 100);
+        }
         System.out.println();
         System.out.println("Total flour amount is: " + Conversions.decimalToVolume(Conversions.round(
-                (double) flourWeight / 120.00, 2)));
-        initialHydration = Math.round(((double) liquidWeight / (double) flourWeight) * 100);
+                flourWeight / 120.00, 2)));
         System.out.println();
         System.out.println("Initial hydration % is: " + (int) initialHydration + "%");
         if (initialHydration < 75.0) {
             System.out.println();
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
-            newLiquidWeight = liquidWeight + getMoreLiquid(flourWeight, liquidWeight);
-            System.out.println("You will need to add " + Conversions.decimalToVolume(Conversions.round(
-                    (double) getMoreLiquid(flourWeight, liquidWeight) / 227.00, 2)) +
-                    " of additional water to your recipe, \nfor a total of " +
-                    Conversions.decimalToVolume(Conversions.round(newLiquidWeight / 227.0, 2)));
-            System.out.println();
-            System.out.println("Amounts for the roux:\n" + Conversions.decimalToVolume(Conversions.round(
-                    getRouxFlourAmount(flourWeight) / 120.0, 2)) + " flour\n" +
-                    Conversions.decimalToVolume(Conversions.round(getRouxWaterAmount(flourWeight) / 227.0, 2))
-                    + " water");
+            if (justMilk >= justWater) {
+                newLiquidWeight = ((justMilk + justWater) * 227.0) + getMoreLiquid(flourWeight, ((justMilk + justWater)
+                        * 227.0));
+                System.out.println("You will need to add " + Conversions.decimalToVolume(Conversions.round(
+                        (double) getMoreLiquid(flourWeight, ((justMilk + justWater) * 227.0)) / 227.00, 2))
+                        + " of additional milk to your recipe, \nfor a total of " +
+                        Conversions.decimalToVolume(Conversions.round(newLiquidWeight / 227.0, 2)));
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + Conversions.decimalToVolume(Conversions.round(
+                        getRouxFlourAmount(flourWeight) / 120.0, 2)) + " flour\n" +
+                        Conversions.decimalToVolume(Conversions.round(getRouxWaterAmount(flourWeight) / 227.0, 2))
+                        + " milk");
+            } else {
+                newLiquidWeight = liquidWeight + getMoreLiquid(flourWeight, liquidWeight);
+                System.out.println("You will need to add " + Conversions.decimalToVolume(Conversions.round(
+                        (double) getMoreLiquid(flourWeight, liquidWeight) / 227.00, 2)) +
+                        " of additional water to your recipe, \nfor a total of " +
+                        Conversions.decimalToVolume(Conversions.round(newLiquidWeight / 227.0, 2)));
+                System.out.println();
+                System.out.println("Amounts for the roux:\n" + Conversions.decimalToVolume(Conversions.round(
+                        getRouxFlourAmount(flourWeight) / 120.0, 2)) + " flour\n" +
+                        Conversions.decimalToVolume(Conversions.round(getRouxWaterAmount(flourWeight) / 227.0, 2))
+                        + " water");
+            }
         } else {
             System.out.println("You have a high enough hydration percentage, you do not need to alter anything");
             System.out.println();
             System.out.println("Amounts for the roux:\n" + Conversions.decimalToVolume(Conversions.round(
                     flourWeight * Conversions.ROUX_PERCENT / 120.0, 2)) + " flour\n" +
                     Conversions.decimalToVolume(Conversions.round(((flourWeight * Conversions.ROUX_PERCENT) /
-                            227.0) * 5, 2)) + " water");
+                            227.0) * 5, 2)) + " liquid");
         }
         gotoPrintMenu();
     }
@@ -351,6 +353,23 @@ public class Volume {
 
     public static int getRouxWaterAmount(double flourWeight) {
         return getRouxFlourAmount(flourWeight) * 5;
+    }
+
+    public static void clearAll() {
+        liquidWeight = 0;
+        flourWeight = 0;
+        initialHydration = 0;
+        newLiquidWeight = 0;
+        timesChoseWater = 0;
+        timesChoseMilk = 0;
+        timesChoseEggs = 0;
+        timesChoseButter = 0;
+        timesChoseHoney = 0;
+        timesChoseSyrup = 0;
+        timesChoseMolasses = 0;
+        timesChoseFlour = 0;
+        justMilk = 0;
+        justWater = 0;
     }
 
 }
