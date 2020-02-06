@@ -30,7 +30,7 @@ public class Ounces {
         int userImperialChoice = reader.nextInt();
 
         if (userImperialChoice == 0) {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else if (userImperialChoice == 1) {
             gotoWater();
         } else if (userImperialChoice == 2) {
@@ -50,7 +50,7 @@ public class Ounces {
         } else if (userImperialChoice == 9) {
             getRouxAmounts();
         } else {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         }
     }
 
@@ -277,7 +277,7 @@ public class Ounces {
         }
         if (userPrintMenuChoice == 0) {
             clearAll();
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else {
             Export.getPDF(Double.toString(getRouxFlourAmount(flourWeight)) + " ounces",
                     Double.toString(getRouxWaterAmount(flourWeight)) + " ounces");

@@ -30,7 +30,7 @@ public class Volume {
         int userVolChoice = reader.nextInt();
 
         if (userVolChoice == 0) {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else if (userVolChoice == 1) {
             gotoWater();
         } else if (userVolChoice == 2) {
@@ -50,7 +50,7 @@ public class Volume {
         } else if (userVolChoice == 9) {
             getRouxAmounts();
         } else {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         }
     }
 
@@ -280,7 +280,7 @@ public class Volume {
         }
         if (userPrintMenuChoice == 0) {
             clearAll();
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else {
             Export.getPDF((Conversions.decimalToVolume(Conversions.round(
                     getRouxFlourAmount(flourWeight) / 120.0, 2))),

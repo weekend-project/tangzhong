@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Grams {
@@ -25,11 +26,17 @@ public class Grams {
                 Menu.setOptionNames("water", "milk", "eggs", "butter", "honey", "syrup", "molasses", "flour",
                         "continue", "back"),
                 Menu.setOptionNumbers('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'), Menu.width);
+
         System.out.print("Enter your choice here: ");
         int userGramsChoice = reader.nextInt();
-
+        while (userGramsChoice < 0 || userGramsChoice > 9) {
+            System.out.println();
+            System.out.print("You must enter a valid option! ");
+            userGramsChoice = reader.nextInt();
+            System.out.println();
+        }
         if (userGramsChoice == 0) {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else if (userGramsChoice == 1) {
             gotoWater();
         } else if (userGramsChoice == 2) {
@@ -49,7 +56,7 @@ public class Grams {
         } else if (userGramsChoice == 9) {
             getRouxAmounts();
         } else {
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         }
     }
 
@@ -276,9 +283,9 @@ public class Grams {
         }
         if (userPrintMenuChoice == 0) {
             clearAll();
-            Main.goToMainMenu();
+            Menu.gotoMainMenu();
         } else {
-            Export.getPDF(getRouxFlourAmount(flourWeight) + "g",getRouxWaterAmount(flourWeight) + "g");
+            Export.getPDF(getRouxFlourAmount(flourWeight) + "g", getRouxWaterAmount(flourWeight) + "g");
         }
     }
 
@@ -301,7 +308,7 @@ public class Grams {
             System.out.println("In order to use tangzhong, the hydration should be at least 75%");
             System.out.println();
             if (justMilk >= justWater) {
-                newLiquidWeight = (justMilk + justWater)+ getMoreWater(flourWeight, (justMilk + justWater));
+                newLiquidWeight = (justMilk + justWater) + getMoreWater(flourWeight, (justMilk + justWater));
                 System.out.println("You will need to add " + getMoreWater(flourWeight, (justMilk + justWater)) +
                         "g additional milk to your recipe, \nfor a total of " + (int) Math.round(newLiquidWeight) + "g");
                 System.out.println();

@@ -1,24 +1,83 @@
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class Menu {
+    private static Scanner reader = new Scanner(System.in);
     public static final String TITLE = "tangzhong recipe builder";
     public static String separator = ":  ";
     public static int width = 60;
-    char[] charsTitle = {'+', '=', '=' };
-    char[] charsBanner = {'|', '>', '<' };
-    char[] charsRow = {'|', ' ', '-' };
+    public static char[] charsTitle = {'+', '=', '='};
+    public static char[] charsBanner = {'|', '>', '<'};
+    public static char[] charsRow = {'|', ' ', '-'};
 
-    /** --- drawMenu method ---
+    /**
+     * When calling drawMenu, change some parameters using the arrays created at the top of this class, and pass in
+     * custom parameters when calling setOptionNames() and setOptionNumbers()
+     *
+     * @throws IOException
+     */
+    public static void gotoMainMenu() throws IOException {
+        drawMenu(charsTitle, charsBanner, charsRow, TITLE, "main menu",
+                setOptionNames("grams", "ounces", "volume", "exit"), setOptionNumbers('1', '2', '3', '0'),
+                width);
+
+        System.out.print("Enter your choice here: ");
+        int userMainChoice = reader.nextInt();
+        System.out.println();
+        while (userMainChoice < 0 || userMainChoice > 3) {
+            System.out.println();
+            System.out.print("You must enter a valid option! ");
+            userMainChoice = reader.nextInt();
+            System.out.println();
+        }
+        if (userMainChoice == 0) {
+            System.out.println("Goodbye!");
+
+        }
+        if (userMainChoice == 1) {
+            Grams.gotoGramsMenu();
+        } else if (userMainChoice == 2) {
+            Ounces.gotoOuncesMenu();
+        } else { // userMainChoice == 3
+            drawMenu(charsTitle, charsBanner, charsRow, TITLE, "! attention !",
+                    setOptionNames("i understand", "go back"), setOptionNumbers('1', '0'), width);
+            System.out.println("Using volume measurements is not recommended, you will experience \nsome " +
+                    "inherent rounding errors.");
+            System.out.println();
+            System.out.println("Proceed?");
+            System.out.println();
+            System.out.print("Enter your choice here: ");
+            int proceed = reader.nextInt();
+            while (proceed < 0 || proceed > 1) {
+                System.out.println();
+                System.out.println("You must enter a valid number!");
+                System.out.println();
+                System.out.print("Enter your choice here: ");
+                proceed = reader.nextInt();
+            }
+            if (proceed == 1) {
+                Volume.gotoVolumeMenu();
+            } else { // proceed == 0
+                gotoMainMenu();
+            }
+        }
+    }
+
+    /**
+     * --- drawMenu method ---
      * (1) calls drawTitle, which passes charsTitle array, title string, and width int. This draws the top-most row
      * (2) calls drawBanner, which passes charsBanner array, banner string, and width int. Draws the banner row
      * (3) calls drawRow, which passes the first and second characters in array charsRow, and draws a generic row
      * (4) determines the max length of each option name + the separator length + option number so that things are
-     *     centered and right-aligned
+     * centered and right-aligned
      * (5) calls drawRowWithOption as many times as there are strings in the optionNames ArrayList, which is populated
-     *     from the call setOptionNames(<custom strings here>)
+     * from the call setOptionNames(<custom strings here>)
      * (6) draws one generic row for aesthetics only
      * (7) draw the bottom-most row with a different char to close the box
      * --------------------------------------------------------------------
+     *
      * @param charsTitle  array that holds all characters in the title bar
      * @param charsBanner array that holds all characters in the banner bar
      * @param charsRow    array that holds all characters in each row
@@ -52,7 +111,8 @@ public class Menu {
         return maxLength;
     }
 
-    /** --- drawTitle method ---
+    /**
+     * --- drawTitle method ---
      * (1) control flow determines if the length of the title string is even or odd and if the int width is even or odd
      * (2) prints the outside char one time
      * (3) prints the left char as many times as (width - title.length()) / 2
@@ -60,9 +120,10 @@ public class Menu {
      * (5) prints the right char as many times as (width - title.length()) / 2
      * (6) prints the outside char one time
      * ---------------------------------------------------------------
+     *
      * @param charsTitle array that holds all chars for the title row
-     * @param title The primary title string
-     * @param width The width of the whole box, not counting the outside chars
+     * @param title      The primary title string
+     * @param width      The width of the whole box, not counting the outside chars
      */
     public static void drawTitle(char[] charsTitle, String title, int width) {
 
@@ -215,12 +276,12 @@ public class Menu {
             for (int i = 1; i <= ((width - lengthOfOption) / 2); i++) {
                 System.out.print(inCharRight);
             }
-        } else if (width % 2 != 0 && lengthOfOption % 2 == 0){
+        } else if (width % 2 != 0 && lengthOfOption % 2 == 0) {
             for (int i = 0; i <= ((width - lengthOfOption) / 2); i++) {
                 System.out.print(inCharRight);
             }
-        } else if (width % 2 == 0){
-            for (int i = 0; i <= ((width - lengthOfOption)/ 2); i++) {
+        } else if (width % 2 == 0) {
+            for (int i = 0; i <= ((width - lengthOfOption) / 2); i++) {
                 System.out.print(inCharRight);
             }
         } else {
